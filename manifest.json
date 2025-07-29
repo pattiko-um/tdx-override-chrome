@@ -9,6 +9,7 @@
         "https://teamdynamix.umich.edu/TDWorkManagement/",
         "https://teamdynamix.umich.edu/TDNext/Apps/*"
       ],
+      "css": ["overrides.css"],
       "js": ["overrides.js"],
       "run_at": "document_start"
     }
