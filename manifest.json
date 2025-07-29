@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "TeamDynamix Style Override",
+  "version": "1.0",
+  "description": "Overrides styles for TDWorkManagement and TDNext Apps.",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://teamdynamix.umich.edu/TDWorkManagement/",
+        "https://teamdynamix.umich.edu/TDNext/Apps/*"
+      ],
+      "js": ["overrides.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": [],
+  "host_permissions": [
+    "https://teamdynamix.umich.edu/TDWorkManagement/",
+    "https://teamdynamix.umich.edu/TDNext/Apps/*"
+  ]
+}
