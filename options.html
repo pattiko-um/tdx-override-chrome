@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TDX Live Overrides: Settings</title>
+    <style>
+      body { font-family: sans-serif; margin: 2em; background-color: #2F65A7; color: white; }
+      label { display: block; width: 160px; padding-bottom: 1em; font-size: 1.5em;}
+	  .heading { }
+      .row { margin-bottom: 10px; width: 100%; border-top: 2px solid #FFCB05; padding-top: 1em;}
+	  .row label { width: inherit;}
+      #status { margin: 1em 0; color: green; }
+	  #subhead { color: #FFCB05; }
+    </style>
+  </head>
+  <body>
+	<div class="heading">
+		<h1>TDX Live Overrides: <span id="subhead"><em>Settings</em></span></h1>
+	</div>
+    <div class="row">
+      <label for="theme">Theme:
+	      <select id="theme">
+	        <option value="default">Default</option>
+	        <option value="um">UofM</option>
+	        <option value="greyscale">Greyscale</option>
+	      </select>
+	  </label>
+    </div>
+    <div class="row">
+      <label>
+        <input type="checkbox" id="popup" />
+        Change Modals to Pop-Ups
+      </label>
+    </div>
+    <div id="status"></div>
+    <script src="options.js"></script>
+  </body>
+</html>
