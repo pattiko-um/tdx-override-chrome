@@ -1,0 +1,10 @@
+html {
+  filter: grayscale(100%) !important;
+}
+/* Optionally, further override for purity: */
+body, * {
+  background: #fff !important;
+  color: #222 !important;
+  border-color: #aaa !important;
+  box-shadow: none !important;
+}
