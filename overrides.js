@@ -43,20 +43,20 @@ function applySettings(settings) {
   // Remove/add click-listener as needed
   if (settings.prefPopup === true || settings.popup === true) {
     if (!popupListenerActive) {
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", () => {
-          waitForElement('.tdx-dashboard', init);
-        });
-      } else {
-        waitForElement('.tdx-dashboard', init);
-      }
+			initializeJsOverrides();
       popupListenerActive = true;
     }
   } else if (popupListenerActive) {
-    document.removeEventListener('click', popupClickIntercept, true);
     popupListenerActive = false;
   }
 }
+
+function initializeJsOverrides() {
+  // Check if this is a popup window
+  const isPopup = window.opener && !window.opener.closed;
+
+  isPopup ? initializePopup() : initializeDashboard();
+};
 
 // Generic check that a given element has loaded
 function waitForElement(selector, callback, timeout = 10000) {
@@ -74,6 +74,30 @@ function waitForElement(selector, callback, timeout = 10000) {
   check();
 }
 
+// Open a URL in a new popup window
+function openUrlInPopup(e, url) {
+  const popupWidth = 800;
+  const popupHeight = 800;
+
+  // Prevent default link behavior
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+
+  window.open(url, "_blank", `width=${popupWidth},height=${popupHeight}`);
+};
+
+function initializeDashboard() {
+  // Override ticket links when .tdx-dashboard element is available
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      waitForElement('.tdx-dashboard', overrideTicketLinks);
+    });
+  } else {
+    waitForElement('.tdx-dashboard', overrideTicketLinks);
+  }
+};
+
 // Override ticket links (open in new popup instead of slide-in)
 function overrideTicketLinks(container) {
   document.addEventListener(
@@ -84,15 +108,22 @@ function overrideTicketLinks(container) {
       const link = e.target.closest('a[onclick^="return openWinHref"]');
       if (!link) return;
 
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-
-      window.open(link.href, "_blank", "width=1000,height=800");
+      openUrlInPopup(e, link.href);
     },
     true
   );
-}
+};
+
+function initializePopup() {
+  // Override Update button when #divUpdateFromActions element is available
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      waitForElement('#divUpdateFromActions', overrideUpdateButton);
+    });
+  } else {
+    waitForElement('#divUpdateFromActions', overrideUpdateButton);
+  }
+};
 
 function overrideUpdateButton() {
   const el = document.querySelector('#divUpdateFromActions');
@@ -101,10 +132,11 @@ function overrideUpdateButton() {
   const onclickCode = el.getAttribute("onclick");
   if (!onclickCode) return;
 
-  const match = onclickCode.match(/openWin\('([^']+)',\s*(\d+),\s*(\d+),/);
+  // Extract the URL from the onclick code
+  const match = onclickCode.match(/openWin\('([^']+)'/);
   if (!match) return;
 
-  const [, url, width, height] = match;
+  const url = match[1];
 
   // Remove original onclick from the <li>
   el.removeAttribute("onclick");
@@ -114,34 +146,8 @@ function overrideUpdateButton() {
   if (link) {
     link.setAttribute("href", "#");
     link.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-      window.open(url, "_blank", `width=${width},height=${height}`);
+      openUrlInPopup(e, url);
       return false;
     });
   }
-
-  // Attach handler to <li> too, just in case
-  el.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-    window.open(url, "_blank", `width=${width},height=${height}`);
-    return false;
-  });
-}
-
-function waitForUpdateButton() {
-  const observer = new MutationObserver(() => overrideUpdateButton());
-  observer.observe(document.body, { childList: true, subtree: true });
-  overrideUpdateButton();
-}
-
-waitForUpdateButton();
-
-// Initialization
-function init(container) {
-  overrideTicketLinks(container);
-  overrideUpdateButton();
-}
+};
