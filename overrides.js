@@ -74,20 +74,23 @@ function waitForElement(selector, callback, timeout = 10000) {
   check();
 }
 
-// Override link elements (open in new popup instead of slide-in)
-function overrideLinks() {
-  document.addEventListener(
-    "click",
-    function (e) {
-      if (!document.contains(e.target)) return;
+function initializeDashboard() {
+  // Override ticket links when .tdx-dashboard element is available
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      waitForElement('.tdx-dashboard', overrideOpenWinHrefAs);
+    });
+  } else {
+    waitForElement('.tdx-dashboard', overrideOpenWinHrefAs);
+  }
+};
 
-      const link = e.target.closest('a[onclick^="return openWinHref"]');
-      if (!link) return;
-
-      openUrlInPopup(e, link.href);
-    },
-    true
-  );
+function initializePopup() {
+  // Override Update button when #divUpdateFromActions element is available
+  overrideOpenWinLis();
+  overrideWorkMgmtModalLis();
+  overrideOpenWinHrefAs();
+  overrideOpenWorkMgmtModalAs();
 };
 
 // Open a URL in a new popup window
@@ -103,46 +106,98 @@ function openUrlInPopup(e, url) {
   window.open(url, "_blank", `width=${popupWidth},height=${popupHeight}`);
 };
 
-function initializeDashboard() {
-  // Override ticket links when .tdx-dashboard element is available
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      waitForElement('.tdx-dashboard', overrideLinks);
-    });
-  } else {
-    waitForElement('.tdx-dashboard', overrideLinks);
-  }
+// Override <a> elements with onclick="openWinHref" to use popup behavior
+function overrideOpenWinHrefAs() {
+  document.addEventListener(
+    "click",
+    function (e) {
+      if (!document.contains(e.target)) return;
+
+      const link = e.target.closest('a[onclick^="return openWinHref"]');
+      if (!link) return;
+
+      openUrlInPopup(e, link.href);
+    },
+    true
+  );
 };
 
-function initializePopup() {
-  // Override Update button when #divUpdateFromActions element is available
-  overrideUpdateButton();
-  overrideLinks();
-};
+// Override <a> elements with onclick="javascript:openWorkMgmtModal" to use popup behavior
+function overrideOpenWorkMgmtModalAs() {
+  const as = document.querySelectorAll('a[onclick*="openWorkMgmtModal"]');
 
-function overrideUpdateButton() {
-  const el = document.querySelector('#divUpdateFromActions');
-  if (!el) return;
+  as.forEach(a => {
+    const onclickCode = a.getAttribute("onclick");
+    if (!onclickCode) return;
 
-  const onclickCode = el.getAttribute("onclick");
-  if (!onclickCode) return;
+    // Extract the URL from the onclick code
+    const match = onclickCode.match(/openWorkMgmtModal\('([^']+)'/);
+    if (!match) return;
 
-  // Extract the URL from the onclick code
-  const match = onclickCode.match(/openWin\('([^']+)'/);
-  if (!match) return;
+    const url = match[1];
 
-  const url = match[1];
+    // Remove original onclick from the <li>
+    a.removeAttribute("onclick");
+    a.removeAttribute("href");
 
-  // Remove original onclick from the <li>
-  el.removeAttribute("onclick");
-
-  // Also make the <a> completely inert
-  const link = el.querySelector('a');
-  if (link) {
-    link.setAttribute("href", "#");
-    link.addEventListener("click", (e) => {
+    a.addEventListener("click", (e) => {
       openUrlInPopup(e, url);
-      return false;
-    });
-  }
+    }, true);
+  });
+};
+
+// Override <li> elements with onclick="openWin" to use popup behavior
+function overrideOpenWinLis() {
+  const lis = document.querySelectorAll('li[onclick*="openWin"]');
+  lis.forEach(li => {
+    const onclickCode = li.getAttribute("onclick");
+    if (!onclickCode) return;
+
+    // Extract the URL from the onclick code
+    const match = onclickCode.match(/openWin\('([^']+)'/);
+    if (!match) return;
+
+    const url = match[1];
+
+    // Remove original onclick from the <li>
+    li.removeAttribute("onclick");
+
+    // Find the <a> inside and override its click
+    const link = li.querySelector('a');
+    if (link) {
+      link.setAttribute("href", "#");
+      link.addEventListener("click", (e) => {
+        openUrlInPopup(e, url);
+      });
+    }
+  });
+};
+
+// Override <li> elements with onclick="openWorkMgmtModal" to use popup behavior
+// Lots of overlap with overrideOpenWin, but we may want these to behave differently in the future
+// so keeping them separate for now
+function overrideWorkMgmtModalLis() {
+  const lis = document.querySelectorAll('li[onclick*="openWorkMgmtModal"]');
+  lis.forEach(li => {
+    const onclickCode = li.getAttribute("onclick");
+    if (!onclickCode) return;
+
+    // Extract the URL from the onclick code
+    const match = onclickCode.match(/openWorkMgmtModal\('([^']+)'/);
+    if (!match) return;
+
+    const url = match[1];
+
+    // Remove original onclick from the <li>
+    li.removeAttribute("onclick");
+
+    // Find the <a> inside and override its click
+    const link = li.querySelector('a');
+    if (link) {
+      link.setAttribute("href", "#");
+      link.addEventListener("click", (e) => {
+        openUrlInPopup(e, url);
+      });
+    }
+  });
 };
