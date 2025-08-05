@@ -74,6 +74,22 @@ function waitForElement(selector, callback, timeout = 10000) {
   check();
 }
 
+// Override link elements (open in new popup instead of slide-in)
+function overrideLinks() {
+  document.addEventListener(
+    "click",
+    function (e) {
+      if (!document.contains(e.target)) return;
+
+      const link = e.target.closest('a[onclick^="return openWinHref"]');
+      if (!link) return;
+
+      openUrlInPopup(e, link.href);
+    },
+    true
+  );
+};
+
 // Open a URL in a new popup window
 function openUrlInPopup(e, url) {
   const popupWidth = 800;
@@ -91,38 +107,17 @@ function initializeDashboard() {
   // Override ticket links when .tdx-dashboard element is available
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
-      waitForElement('.tdx-dashboard', overrideTicketLinks);
+      waitForElement('.tdx-dashboard', overrideLinks);
     });
   } else {
-    waitForElement('.tdx-dashboard', overrideTicketLinks);
+    waitForElement('.tdx-dashboard', overrideLinks);
   }
-};
-
-// Override ticket links (open in new popup instead of slide-in)
-function overrideTicketLinks(container) {
-  document.addEventListener(
-    "click",
-    function (e) {
-      if (!container.contains(e.target)) return;
-
-      const link = e.target.closest('a[onclick^="return openWinHref"]');
-      if (!link) return;
-
-      openUrlInPopup(e, link.href);
-    },
-    true
-  );
 };
 
 function initializePopup() {
   // Override Update button when #divUpdateFromActions element is available
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      waitForElement('#divUpdateFromActions', overrideUpdateButton);
-    });
-  } else {
-    waitForElement('#divUpdateFromActions', overrideUpdateButton);
-  }
+  overrideUpdateButton();
+  overrideLinks();
 };
 
 function overrideUpdateButton() {
