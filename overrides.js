@@ -43,19 +43,90 @@ function applySettings(settings) {
   // Remove/add click-listener as needed
   if (settings.prefPopup === true || settings.popup === true) {
     if (!popupListenerActive) {
-      document.addEventListener('click', popupClickIntercept, true);
+			initializeJsOverrides();
       popupListenerActive = true;
     }
   } else if (popupListenerActive) {
-    document.removeEventListener('click', popupClickIntercept, true);
     popupListenerActive = false;
   }
 }
-// Handler must be defined separately for add/remove
-function popupClickIntercept(e) {
-  const a = e.target.closest('a[onclick^="return openWinHref"]');
-  if (!a) return;
-  e.preventDefault();
-  e.stopImmediatePropagation();
-  window.open(a.href, "_blank", "width=800,height=800");
+
+// Essentially a list of elements that have an onclick attribute
+// that we want to override to open in a popup window instead of sliding in.
+function initializeJsOverrides() {
+  observeAndOverride('a', 'openWinHref');
+  observeAndOverride('a', 'openWorkMgmtModal');
+  observeAndOverride('li', 'openWin');
+  observeAndOverride('li', 'openWorkMgmtModal');
+};
+
+// Observe the document for changes and apply overrides dynamically
+// for elements that match the given selector and onclick function
+function observeAndOverride(selector, onclickFunction) {
+  const observer = new MutationObserver(() => {
+    overrideElementClickBehavior(selector, onclickFunction);
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  // Run it once in case it's already there
+  overrideElementClickBehavior(selector, onclickFunction);
 }
+
+function overrideElementClickBehavior(selector, onclickFunction) {
+  // Find all elements that match the selector and have the onclick function
+  const els = document.querySelectorAll(`${selector}[onclick*="${onclickFunction}"]`);
+  
+  // Iterate over each element and override the onclick behavior
+  els.forEach(el => {
+    const url = extractUrlFromEl(el, onclickFunction);
+    if (!url) return;
+
+    // Remove original onclick from the <li>
+    el.removeAttribute("onclick");
+
+    // Add a new click event listener that opens the URL in a popup
+    el.addEventListener("click", (e) => {
+      openUrlInPopup(e, url);
+    }, true);
+  });
+};
+
+// Extract the URL from the element based on the onclick function
+function extractUrlFromEl(el, onclickFunction) {
+    let url;
+
+    // TODO: Make this more generic
+    if (onclickFunction == 'openWinHref') {
+      url = el.href;
+    } else {
+      const onclickAttr = el.getAttribute("onclick");
+      if (!onclickAttr) return;
+
+      // Generate a regex to extract the URL from the onclick attribute
+      const regex = new RegExp(`${onclickFunction}\\('([^']+)'`);
+      const match = onclickAttr.match(regex); 
+      
+      if (!match) return;
+
+      url = match[1];
+    }
+
+    return url;
+};
+
+// Open a URL in a new popup window
+function openUrlInPopup(e, url) {
+  const popupWidth = 800;
+  const popupHeight = 800;
+
+  // Prevent default link behavior
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+
+  window.open(url, "_blank", `width=${popupWidth},height=${popupHeight}`);
+};

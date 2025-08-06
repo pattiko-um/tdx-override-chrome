@@ -9,7 +9,8 @@
         "https://teamdynamix.umich.edu/*"
       ],
       "js": ["overrides.js"],
-      "run_at": "document_start"
+      "run_at": "document_idle",
+      "all_frames": true
     }
   ],
   "permissions": [
