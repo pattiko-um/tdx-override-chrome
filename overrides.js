@@ -51,46 +51,71 @@ function applySettings(settings) {
   }
 }
 
+// Essentially a list of elements that have an onclick attribute
+// that we want to override to open in a popup window instead of sliding in.
 function initializeJsOverrides() {
-  // Check if this is a popup window
-  const isPopup = window.opener && !window.opener.closed;
-
-  isPopup ? initializePopup() : initializeDashboard();
+  observeAndOverride('a', 'openWinHref');
+  observeAndOverride('a', 'openWorkMgmtModal');
+  observeAndOverride('li', 'openWin');
+  observeAndOverride('li', 'openWorkMgmtModal');
 };
 
-// Generic check that a given element has loaded
-function waitForElement(selector, callback, timeout = 10000) {
-  const start = Date.now();
-  const check = () => {
-    const el = document.querySelector(selector);
-    if (el) {
-      callback(el);
-    } else if (Date.now() - start < timeout) {
-      requestAnimationFrame(check);
-    } else {
-      console.warn("Timeout waiting for element:", selector);
-    }
-  };
-  check();
+// Observe the document for changes and apply overrides dynamically
+// for elements that match the given selector and onclick function
+function observeAndOverride(selector, onclickFunction) {
+  const observer = new MutationObserver(() => {
+    overrideElementClickBehavior(selector, onclickFunction);
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  // Run it once in case it's already there
+  overrideElementClickBehavior(selector, onclickFunction);
 }
 
-function initializeDashboard() {
-  // Override ticket links when .tdx-dashboard element is available
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      waitForElement('.tdx-dashboard', overrideOpenWinHrefAs);
-    });
-  } else {
-    waitForElement('.tdx-dashboard', overrideOpenWinHrefAs);
-  }
+function overrideElementClickBehavior(selector, onclickFunction) {
+  // Find all elements that match the selector and have the onclick function
+  const els = document.querySelectorAll(`${selector}[onclick*="${onclickFunction}"]`);
+  
+  // Iterate over each element and override the onclick behavior
+  els.forEach(el => {
+    const url = extractUrlFromEl(el, onclickFunction);
+    if (!url) return;
+
+    // Remove original onclick from the <li>
+    el.removeAttribute("onclick");
+
+    // Add a new click event listener that opens the URL in a popup
+    el.addEventListener("click", (e) => {
+      openUrlInPopup(e, url);
+    }, true);
+  });
 };
 
-function initializePopup() {
-  // Override Update button when #divUpdateFromActions element is available
-  overrideOpenWinLis();
-  overrideWorkMgmtModalLis();
-  overrideOpenWinHrefAs();
-  overrideOpenWorkMgmtModalAs();
+// Extract the URL from the element based on the onclick function
+function extractUrlFromEl(el, onclickFunction) {
+    let url;
+
+    // TODO: Make this more generic
+    if (onclickFunction == 'openWinHref') {
+      url = el.href;
+    } else {
+      const onclickAttr = el.getAttribute("onclick");
+      if (!onclickAttr) return;
+
+      // Generate a regex to extract the URL from the onclick attribute
+      const regex = new RegExp(`${onclickFunction}\\('([^']+)'`);
+      const match = onclickAttr.match(regex); 
+      
+      if (!match) return;
+
+      url = match[1];
+    }
+
+    return url;
 };
 
 // Open a URL in a new popup window
@@ -104,100 +129,4 @@ function openUrlInPopup(e, url) {
   e.stopImmediatePropagation();
 
   window.open(url, "_blank", `width=${popupWidth},height=${popupHeight}`);
-};
-
-// Override <a> elements with onclick="openWinHref" to use popup behavior
-function overrideOpenWinHrefAs() {
-  document.addEventListener(
-    "click",
-    function (e) {
-      if (!document.contains(e.target)) return;
-
-      const link = e.target.closest('a[onclick^="return openWinHref"]');
-      if (!link) return;
-
-      openUrlInPopup(e, link.href);
-    },
-    true
-  );
-};
-
-// Override <a> elements with onclick="javascript:openWorkMgmtModal" to use popup behavior
-function overrideOpenWorkMgmtModalAs() {
-  const as = document.querySelectorAll('a[onclick*="openWorkMgmtModal"]');
-
-  as.forEach(a => {
-    const onclickCode = a.getAttribute("onclick");
-    if (!onclickCode) return;
-
-    // Extract the URL from the onclick code
-    const match = onclickCode.match(/openWorkMgmtModal\('([^']+)'/);
-    if (!match) return;
-
-    const url = match[1];
-
-    // Remove original onclick from the <li>
-    a.removeAttribute("onclick");
-    a.removeAttribute("href");
-
-    a.addEventListener("click", (e) => {
-      openUrlInPopup(e, url);
-    }, true);
-  });
-};
-
-// Override <li> elements with onclick="openWin" to use popup behavior
-function overrideOpenWinLis() {
-  const lis = document.querySelectorAll('li[onclick*="openWin"]');
-  lis.forEach(li => {
-    const onclickCode = li.getAttribute("onclick");
-    if (!onclickCode) return;
-
-    // Extract the URL from the onclick code
-    const match = onclickCode.match(/openWin\('([^']+)'/);
-    if (!match) return;
-
-    const url = match[1];
-
-    // Remove original onclick from the <li>
-    li.removeAttribute("onclick");
-
-    // Find the <a> inside and override its click
-    const link = li.querySelector('a');
-    if (link) {
-      link.setAttribute("href", "#");
-      link.addEventListener("click", (e) => {
-        openUrlInPopup(e, url);
-      });
-    }
-  });
-};
-
-// Override <li> elements with onclick="openWorkMgmtModal" to use popup behavior
-// Lots of overlap with overrideOpenWin, but we may want these to behave differently in the future
-// so keeping them separate for now
-function overrideWorkMgmtModalLis() {
-  const lis = document.querySelectorAll('li[onclick*="openWorkMgmtModal"]');
-  lis.forEach(li => {
-    const onclickCode = li.getAttribute("onclick");
-    if (!onclickCode) return;
-
-    // Extract the URL from the onclick code
-    const match = onclickCode.match(/openWorkMgmtModal\('([^']+)'/);
-    if (!match) return;
-
-    const url = match[1];
-
-    // Remove original onclick from the <li>
-    li.removeAttribute("onclick");
-
-    // Find the <a> inside and override its click
-    const link = li.querySelector('a');
-    if (link) {
-      link.setAttribute("href", "#");
-      link.addEventListener("click", (e) => {
-        openUrlInPopup(e, url);
-      });
-    }
-  });
 };
