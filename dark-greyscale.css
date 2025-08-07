@@ -1,0 +1,13 @@
+html {
+	filter: invert(1) grayscale(1) !important;
+}
+
+.tdx-workmgmt-container__content-iframe {
+	filter: invert(1) grayscale(1) !important;
+}
+
+.tdx-right-side-panel {
+	background-color: #000000 !important;
+	filter: invert(1) grayscale(1) !important;
+	border: 1px #ffffff solid !important;
+}

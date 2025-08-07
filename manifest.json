@@ -27,7 +27,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["overrides.css", "greyscale.css"],
+      "resources": ["overrides.css", "greyscale.css", "dark-greyscale.css"],
       "matches": ["https://teamdynamix.umich.edu/*"]
     }
   ]
