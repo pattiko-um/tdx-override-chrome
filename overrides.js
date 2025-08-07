@@ -37,6 +37,8 @@ function applySettings(settings) {
     injectCss('tdx-um-override-css', 'overrides.css');
   } else if (settings.prefTheme === 'greyscale' || settings.theme === 'greyscale') {
     injectCss('tdx-greyscale-override-css', 'greyscale.css');
+  } else if (settings.prefTheme === 'dark-greyscale' || settings.theme === 'dark-greyscale') {
+    injectCss('tdx-dark-greyscale-override-css', 'dark-greyscale.css');
   }
 
   // POPUP LOGIC
