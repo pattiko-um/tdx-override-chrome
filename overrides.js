@@ -1,3 +1,9 @@
+// Inject page-hook.js into the real page context so we can patch their globals
+const script = document.createElement('script');
+script.src = chrome.runtime.getURL('page-hook.js');
+script.onload = () => script.remove();
+(document.documentElement || document.head).appendChild(script);
+
 // Utility: inject or remove CSS by id and file
 function injectCss(id, file) {
   // Remove existing style if present
@@ -65,17 +71,23 @@ function initializeJsOverrides() {
 // Observe the document for changes and apply overrides dynamically
 // for elements that match the given selector and onclick function
 function observeAndOverride(selector, onclickFunction) {
-  const observer = new MutationObserver(() => {
+  const startObserving = () => {
+    const observer = new MutationObserver(() => {
+      overrideElementClickBehavior(selector, onclickFunction);
+    });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+    // Run it once in case elements are already there
     overrideElementClickBehavior(selector, onclickFunction);
-  });
+  };
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-
-  // Run it once in case it's already there
-  overrideElementClickBehavior(selector, onclickFunction);
+  if (document.body) {
+    startObserving();
+  } else {
+    document.addEventListener('DOMContentLoaded', startObserving, { once: true });
+  }
 }
 
 function overrideElementClickBehavior(selector, onclickFunction) {
