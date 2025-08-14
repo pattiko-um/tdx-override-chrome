@@ -269,3 +269,7 @@ body:not(.draggable--is-dragging) .tdx-dashboard-row-editor__selected-widget-con
     background: #fff !important;
     border: 1px solid #d9d9d9 !important;
 }
+
+.navbar {
+  background-color: #FFCB05 !important;
+}

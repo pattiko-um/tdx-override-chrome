@@ -1,3 +1,9 @@
+const cssThemeNames = {
+  'um': 'tdx-um-override-css',
+  'greyscale': 'tdx-greyscale-override-css',
+  'dark-greyscale': 'tdx-dark-greyscale-override-css'
+};
+
 // Utility: inject or remove CSS by id and file
 function injectCss(id, file) {
   // Remove existing style if present
@@ -36,19 +42,38 @@ function applySettings(settings) {
   // THEME LOGIC
   // Clear previous CSS Overrides
   // When adding a new theme, add a new line here with the CSS Class to remove
-  removeCss('tdx-um-override-css');
-  removeCss('tdx-greyscale-override-css');
-  removeCss('tdx-dark-greyscale-override-css');
+
+  // Get an array of the object's keys
+  const cssKeys = Object.keys(cssThemeNames);
+
+  // Iterate over the keys array to get both key and a numerical index
+  cssKeys.forEach((key, index) => {
+    const value = cssThemeNames[key];
+    removeCss(value);
+  });
+
+  cssKeys.forEach((key, index) => {
+    const value = cssThemeNames[key];
+    // If the current key matches the settings, inject the corresponding CSS
+    if (settings.prefTheme === key || settings.theme === key) {
+      injectCss(value, `${key}.css`);
+      injectCssIntoRightPanelIframe(`${key}.css`);
+    }
+  });
+
   // Set new CSS Override based on Theme chooser
   // When adding a new theme, create a new else if statement with the new class
   // In the future, this should be updated to a looped list or dict
-  if (settings.prefTheme === 'um' || settings.theme === 'um') {
-    injectCss('tdx-um-override-css', 'overrides.css');
-  } else if (settings.prefTheme === 'greyscale' || settings.theme === 'greyscale') {
-    injectCss('tdx-greyscale-override-css', 'greyscale.css');
-  } else if (settings.prefTheme === 'dark-greyscale' || settings.theme === 'dark-greyscale') {
-    injectCss('tdx-dark-greyscale-override-css', 'dark-greyscale.css');
-  }
+  // if (settings.prefTheme === 'um' || settings.theme === 'um') {
+  //   injectCss('tdx-um-override-css', 'overrides.css');
+  //   injectCssIntoRightPanelIframe('overrides.css');
+  // } else if (settings.prefTheme === 'greyscale' || settings.theme === 'greyscale') {
+  //   injectCss('tdx-greyscale-override-css', 'greyscale.css');
+  //   injectCssIntoRightPanelIframe('greyscale.css');
+  // } else if (settings.prefTheme === 'dark-greyscale' || settings.theme === 'dark-greyscale') {
+  //   injectCss('tdx-dark-greyscale-override-css', 'dark-greyscale.css');
+  //   injectCssIntoRightPanelIframe('dark-greyscale.css');
+  // }
   // else {
   //   console.log("TDX-Overrides-Warning: No Theme change applied.")
   // }
@@ -159,3 +184,25 @@ function openUrlInPopup(e, url) {
 
   window.open(url, "_blank", `width=${popupWidth},height=${popupHeight}`);
 };
+
+function injectCssIntoRightPanelIframe(cssFile) {
+  console.log("TDX-Overrides-Log: Attempting to inject CSS into right panel iframe");
+  const iframe = document.querySelector('.tdx-right-side-panel__iframe');
+  if (!iframe) return;
+
+  iframe.addEventListener('load', () => {
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    if (!doc) return;
+
+    // Remove existing style if present
+    // const old = doc.getElementById(cssId);
+    // if (old) old.remove();
+
+    const link = doc.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.id = cssId;
+    link.href = chrome.runtime.getURL(cssFile);
+    doc.head.appendChild(link);
+  }, { once: true });
+}

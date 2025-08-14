@@ -6,7 +6,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://teamdynamix.umich.edu/TDWorkManagement/*"
+        "https://teamdynamix.umich.edu/TDWorkManagement/*",
+        "https://teamdynamix.umich.edu/TDNext/Apps/*"
       ],
       "js": ["overrides.js"],
       "run_at": "document_start",
@@ -19,7 +20,8 @@
     "scripting"
   ],
   "host_permissions": [
-    "https://teamdynamix.umich.edu/TDWorkManagement/*"
+    "https://teamdynamix.umich.edu/TDWorkManagement/*",
+    "https://teamdynamix.umich.edu/TDNext/Apps/*"
   ],
   "options_ui": {
     "page": "options.html",
@@ -28,7 +30,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "overrides.css",
+        "um.css",
         "greyscale.css",
         "dark-greyscale.css",
         "page-hook.js"
