@@ -32,9 +32,16 @@ let popupListenerActive = false;
 let pageHookInjected = false; // Track if page-hook.js is injected
 
 function applySettings(settings) {
+  //console.log("TDX-Overrides-Log: Attempting to apply theme: " + settings.prefTheme);
   // THEME LOGIC
+  // Clear previous CSS Overrides
+  // When adding a new theme, add a new line here with the CSS Class to remove
   removeCss('tdx-um-override-css');
   removeCss('tdx-greyscale-override-css');
+  removeCss('tdx-dark-greyscale-override-css');
+  // Set new CSS Override based on Theme chooser
+  // When adding a new theme, create a new else if statement with the new class
+  // In the future, this should be updated to a looped list or dict
   if (settings.prefTheme === 'um' || settings.theme === 'um') {
     injectCss('tdx-um-override-css', 'overrides.css');
   } else if (settings.prefTheme === 'greyscale' || settings.theme === 'greyscale') {
@@ -42,6 +49,9 @@ function applySettings(settings) {
   } else if (settings.prefTheme === 'dark-greyscale' || settings.theme === 'dark-greyscale') {
     injectCss('tdx-dark-greyscale-override-css', 'dark-greyscale.css');
   }
+  // else {
+  //   console.log("TDX-Overrides-Warning: No Theme change applied.")
+  // }
 
   // POPUP LOGIC
   if (settings.prefPopup === true || settings.popup === true) {
@@ -98,7 +108,7 @@ function observeAndOverride(selector, onclickFunction) {
 function overrideElementClickBehavior(selector, onclickFunction) {
   // Find all elements that match the selector and have the onclick function
   const els = document.querySelectorAll(`${selector}[onclick*="${onclickFunction}"]`);
-  
+
   // Iterate over each element and override the onclick behavior
   els.forEach(el => {
     const url = extractUrlFromEl(el, onclickFunction);
@@ -127,8 +137,8 @@ function extractUrlFromEl(el, onclickFunction) {
 
       // Generate a regex to extract the URL from the onclick attribute
       const regex = new RegExp(`${onclickFunction}\\('([^']+)'`);
-      const match = onclickAttr.match(regex); 
-      
+      const match = onclickAttr.match(regex);
+
       if (!match) return;
 
       url = match[1];
