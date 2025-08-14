@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TeamDynamix Style Override",
-  "version": "1.1",
+  "version": "1.2",
   "description": "Live overrides for style and popups on TeamDynamix.",
   "content_scripts": [
     {
@@ -9,7 +9,7 @@
         "https://teamdynamix.umich.edu/TDWorkManagement/*"
       ],
       "js": ["overrides.js"],
-      "run_at": "document_idle",
+      "run_at": "document_start",
       "all_frames": true
     }
   ],
@@ -27,7 +27,12 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["overrides.css", "greyscale.css", "dark-greyscale.css"],
+      "resources": [
+        "overrides.css",
+        "greyscale.css",
+        "dark-greyscale.css",
+        "page-hook.js"
+      ],
       "matches": ["https://teamdynamix.umich.edu/*"]
     }
   ]

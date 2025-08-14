@@ -29,6 +29,8 @@ chrome.storage.sync.get(
 );
 
 let popupListenerActive = false;
+let pageHookInjected = false; // Track if page-hook.js is injected
+
 function applySettings(settings) {
   // THEME LOGIC
   removeCss('tdx-um-override-css');
@@ -42,14 +44,23 @@ function applySettings(settings) {
   }
 
   // POPUP LOGIC
-  // Remove/add click-listener as needed
   if (settings.prefPopup === true || settings.popup === true) {
     if (!popupListenerActive) {
-			initializeJsOverrides();
+      initializeJsOverrides();
       popupListenerActive = true;
     }
-  } else if (popupListenerActive) {
+    // Inject page-hook.js only if not already injected
+    if (!pageHookInjected) {
+      const script = document.createElement('script');
+      script.src = chrome.runtime.getURL('page-hook.js');
+      script.onload = () => script.remove();
+      (document.documentElement || document.head).appendChild(script);
+      pageHookInjected = true;
+    }
+  } else {
     popupListenerActive = false;
+    pageHookInjected = false;
+    // Optionally, remove any hooks if needed (not shown here)
   }
 }
 
@@ -65,17 +76,23 @@ function initializeJsOverrides() {
 // Observe the document for changes and apply overrides dynamically
 // for elements that match the given selector and onclick function
 function observeAndOverride(selector, onclickFunction) {
-  const observer = new MutationObserver(() => {
+  const startObserving = () => {
+    const observer = new MutationObserver(() => {
+      overrideElementClickBehavior(selector, onclickFunction);
+    });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+    // Run it once in case elements are already there
     overrideElementClickBehavior(selector, onclickFunction);
-  });
+  };
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-
-  // Run it once in case it's already there
-  overrideElementClickBehavior(selector, onclickFunction);
+  if (document.body) {
+    startObserving();
+  } else {
+    document.addEventListener('DOMContentLoaded', startObserving, { once: true });
+  }
 }
 
 function overrideElementClickBehavior(selector, onclickFunction) {
