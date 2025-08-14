@@ -5,7 +5,9 @@
   "description": "Live overrides for style and popups on TeamDynamix.",
   "content_scripts": [
     {
-      "matches": ["https://teamdynamix.umich.edu/*"],
+      "matches": [
+        "https://teamdynamix.umich.edu/TDWorkManagement/*"
+      ],
       "js": ["overrides.js"],
       "run_at": "document_start",
       "all_frames": true
@@ -17,11 +19,11 @@
     "scripting"
   ],
   "host_permissions": [
-    "https://teamdynamix.umich.edu/*"
+    "https://teamdynamix.umich.edu/TDWorkManagement/*"
   ],
   "options_ui": {
     "page": "options.html",
-    "open_in_tab": true
+    "open_in_tab": false
   },
   "web_accessible_resources": [
     {
