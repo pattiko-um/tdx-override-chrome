@@ -56,8 +56,8 @@ function applySettings(settings) {
     const value = cssThemeNames[key];
     // If the current key matches the settings, inject the corresponding CSS
     if (settings.prefTheme === key || settings.theme === key) {
-      injectCss(value, `${key}.css`);
-      injectCssIntoRightPanelIframe(`${key}.css`);
+      injectCss(value, `themes/${key}.css`);
+      injectCssIntoRightPanelIframe(`themes/${key}.css`);
     }
   });
 
@@ -87,7 +87,7 @@ function applySettings(settings) {
     // Inject page-hook.js only if not already injected
     if (!pageHookInjected) {
       const script = document.createElement('script');
-      script.src = chrome.runtime.getURL('page-hook.js');
+      script.src = chrome.runtime.getURL('js/page-hook.js');
       script.onload = () => script.remove();
       (document.documentElement || document.head).appendChild(script);
       pageHookInjected = true;

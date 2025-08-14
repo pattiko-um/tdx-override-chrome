@@ -9,7 +9,7 @@
         "https://teamdynamix.umich.edu/TDWorkManagement/*",
         "https://teamdynamix.umich.edu/TDNext/Apps/*"
       ],
-      "js": ["overrides.js"],
+      "js": ["js/content.js"],
       "run_at": "document_start",
       "all_frames": true
     }
@@ -30,10 +30,10 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "um.css",
-        "greyscale.css",
-        "dark-greyscale.css",
-        "page-hook.js"
+        "themes/um.css",
+        "themes/greyscale.css",
+        "themes/dark-greyscale.css",
+        "js/page-hook.js"
       ],
       "matches": ["https://teamdynamix.umich.edu/*"]
     }
