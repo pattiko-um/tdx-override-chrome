@@ -56,27 +56,10 @@ function applySettings(settings) {
     const value = cssThemeNames[key];
     // If the current key matches the settings, inject the corresponding CSS
     if (settings.prefTheme === key || settings.theme === key) {
-      injectCss(value, `${key}.css`);
-      injectCssIntoRightPanelIframe(`${key}.css`);
+      injectCss(value, `themes/${key}.css`);
+      injectCssIntoRightPanelIframe(`themes/${key}.css`);
     }
   });
-
-  // Set new CSS Override based on Theme chooser
-  // When adding a new theme, create a new else if statement with the new class
-  // In the future, this should be updated to a looped list or dict
-  // if (settings.prefTheme === 'um' || settings.theme === 'um') {
-  //   injectCss('tdx-um-override-css', 'overrides.css');
-  //   injectCssIntoRightPanelIframe('overrides.css');
-  // } else if (settings.prefTheme === 'greyscale' || settings.theme === 'greyscale') {
-  //   injectCss('tdx-greyscale-override-css', 'greyscale.css');
-  //   injectCssIntoRightPanelIframe('greyscale.css');
-  // } else if (settings.prefTheme === 'dark-greyscale' || settings.theme === 'dark-greyscale') {
-  //   injectCss('tdx-dark-greyscale-override-css', 'dark-greyscale.css');
-  //   injectCssIntoRightPanelIframe('dark-greyscale.css');
-  // }
-  // else {
-  //   console.log("TDX-Overrides-Warning: No Theme change applied.")
-  // }
 
   // POPUP LOGIC
   if (settings.prefPopup === true || settings.popup === true) {
@@ -87,7 +70,7 @@ function applySettings(settings) {
     // Inject page-hook.js only if not already injected
     if (!pageHookInjected) {
       const script = document.createElement('script');
-      script.src = chrome.runtime.getURL('page-hook.js');
+      script.src = chrome.runtime.getURL('js/page-hook.js');
       script.onload = () => script.remove();
       (document.documentElement || document.head).appendChild(script);
       pageHookInjected = true;
@@ -102,10 +85,18 @@ function applySettings(settings) {
 // Essentially a list of elements that have an onclick attribute
 // that we want to override to open in a popup window instead of sliding in.
 function initializeJsOverrides() {
-  observeAndOverride('a', 'openWinHref');
-  observeAndOverride('a', 'openWorkMgmtModal');
-  observeAndOverride('li', 'openWin');
-  observeAndOverride('li', 'openWorkMgmtModal');
+  const onClickOverrideTargets = [
+    { selector: 'a', onclickFunction: 'openWinHref' },
+    { selector: 'a', onclickFunction: 'openWorkMgmtModal' },
+    { selector: 'li', onclickFunction: 'openWin' },
+    { selector: 'li', onclickFunction: 'openWorkMgmtModal' }
+  ];
+
+  // Iterate over each target and set up the observer
+  // to override the onclick behavior dynamically
+  for (const target of onClickOverrideTargets) {
+    observeAndOverride(target.selector, target.onclickFunction);
+  };
 };
 
 // Observe the document for changes and apply overrides dynamically
