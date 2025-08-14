@@ -1,9 +1,3 @@
-// Inject page-hook.js into the real page context so we can patch their globals
-const script = document.createElement('script');
-script.src = chrome.runtime.getURL('page-hook.js');
-script.onload = () => script.remove();
-(document.documentElement || document.head).appendChild(script);
-
 // Utility: inject or remove CSS by id and file
 function injectCss(id, file) {
   // Remove existing style if present
@@ -35,6 +29,8 @@ chrome.storage.sync.get(
 );
 
 let popupListenerActive = false;
+let pageHookInjected = false; // Track if page-hook.js is injected
+
 function applySettings(settings) {
   // THEME LOGIC
   removeCss('tdx-um-override-css');
@@ -48,14 +44,23 @@ function applySettings(settings) {
   }
 
   // POPUP LOGIC
-  // Remove/add click-listener as needed
   if (settings.prefPopup === true || settings.popup === true) {
     if (!popupListenerActive) {
-			initializeJsOverrides();
+      initializeJsOverrides();
       popupListenerActive = true;
     }
-  } else if (popupListenerActive) {
+    // Inject page-hook.js only if not already injected
+    if (!pageHookInjected) {
+      const script = document.createElement('script');
+      script.src = chrome.runtime.getURL('page-hook.js');
+      script.onload = () => script.remove();
+      (document.documentElement || document.head).appendChild(script);
+      pageHookInjected = true;
+    }
+  } else {
     popupListenerActive = false;
+    pageHookInjected = false;
+    // Optionally, remove any hooks if needed (not shown here)
   }
 }
 
