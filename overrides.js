@@ -44,10 +44,13 @@ function applySettings(settings) {
   // In the future, this should be updated to a looped list or dict
   if (settings.prefTheme === 'um' || settings.theme === 'um') {
     injectCss('tdx-um-override-css', 'overrides.css');
+    injectCssIntoRightPanelIframe('overrides.css');
   } else if (settings.prefTheme === 'greyscale' || settings.theme === 'greyscale') {
     injectCss('tdx-greyscale-override-css', 'greyscale.css');
+    injectCssIntoRightPanelIframe('greyscale.css');
   } else if (settings.prefTheme === 'dark-greyscale' || settings.theme === 'dark-greyscale') {
     injectCss('tdx-dark-greyscale-override-css', 'dark-greyscale.css');
+    injectCssIntoRightPanelIframe('dark-greyscale.css');
   }
   // else {
   //   console.log("TDX-Overrides-Warning: No Theme change applied.")
@@ -159,3 +162,25 @@ function openUrlInPopup(e, url) {
 
   window.open(url, "_blank", `width=${popupWidth},height=${popupHeight}`);
 };
+
+function injectCssIntoRightPanelIframe(cssFile) {
+  console.log("TDX-Overrides-Log: Attempting to inject CSS into right panel iframe");
+  const iframe = document.querySelector('.tdx-right-side-panel__iframe');
+  if (!iframe) return;
+
+  iframe.addEventListener('load', () => {
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    if (!doc) return;
+
+    // Remove existing style if present
+    // const old = doc.getElementById(cssId);
+    // if (old) old.remove();
+
+    const link = doc.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.id = cssId;
+    link.href = chrome.runtime.getURL(cssFile);
+    doc.head.appendChild(link);
+  }, { once: true });
+}
