@@ -1,7 +1,8 @@
 const cssThemeNames = {
   'um': 'tdx-um-override-css',
   'greyscale': 'tdx-greyscale-override-css',
-  'dark-greyscale': 'tdx-dark-greyscale-override-css'
+  'dark-greyscale': 'tdx-dark-greyscale-override-css',
+  'dark': 'tdx-dark-override-css',
 };
 
 // Utility: inject or remove CSS by id and file
@@ -173,7 +174,7 @@ function openUrlInPopup(e, url) {
   e.stopPropagation();
   e.stopImmediatePropagation();
 
-  window.open(url, "_blank", `width=${popupWidth},height=${popupHeight}`);
+  window.open(url, "_blank", `top=100,left=100,width=${popupWidth},height=${popupHeight}`);
 };
 
 function injectCssIntoRightPanelIframe(cssFile) {

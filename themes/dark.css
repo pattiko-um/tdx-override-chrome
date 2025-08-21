@@ -1,0 +1,90 @@
+:root {
+  --bg-color: #121212 !important;
+  --bg-color-alt: #232323 !important;
+  --text-color: #ffffff !important;
+  --text-color-alt: #ffcaf6 !important;
+  --link-color: #b3ffff !important;
+  --border: 1px solid var(--text-color) !important;
+  --border-alt: 1px solid var(--text-color-alt) !important;
+  --border-link: 1px solid var(--link-color) !important;
+}
+
+/* Global */
+body,
+body * {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+body a {
+  color: var(--link-color) !important;
+}
+
+.tdx-table-fade-right {
+  /* Disable fade effect on tables */
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  background: none !important;
+}
+
+/* Borders */
+.tdx-navigation-tabs li {
+  border: var(--border-alt) !important;
+}
+
+.tdx-dashboard__column > div > div {
+  border: var(--border) !important;
+  border-radius: .5em !important;
+}
+
+/* Buttons, Icon/Link Groups */
+.tdx-dropdown, .tdx-dropdown *, /* Dropdown buttons */
+.tdx-navigation-tabs li *, /* Dashboard tabs */ 
+.tdx-action-menu * /* Action menu buttons */{
+  color: var(--text-color-alt) !important;
+  filter: unset !important;
+}
+
+/* Dropdowns  */
+.tdx-dropdown-popout {
+  background-color: transparent !important;
+}
+
+.tdx-dropdown-popout__menu {
+  border: var(--border-alt) !important;
+}
+
+.tdx-dropdown-popout__menu,
+.tdx-dropdown-popout__menu a {
+  border-radius: .5em !important;
+}
+
+/* Pager */
+.k-pager-md .k-pager-numbers-wrap .k-button.k-pager-nav.k-button-md,
+.k-pager-md .k-pager-numbers-wrap .k-button.k-pager-nav.k-button-md:hover,
+.k-pager-md .k-pager-numbers-wrap .k-button.k-pager-nav.k-disabled,
+button.k-button.k-button-md.k-button-flat.k-button-flat-primary:hover,
+button.k-button.k-button-md.k-button-flat.k-button-flat-primary.k-selected,
+button.k-button.k-button-md.k-button-flat.k-button-flat-primary.k-selected:hover {
+  background-color: transparent !important;
+  border: var(--border) !important;
+}
+
+/* Popup */
+#divHeader.white-bg {
+  background-color: var(--bg-color) !important;
+}
+
+.tab-row .btn-primary, 
+.tab-row .btn-primary * {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color-alt) !important;
+}
+
+.tab-row .btn-primary.dropdown-toggle,
+.tab-row .btn-primary:hover {
+  background-color: var(--bg-color) !important;
+  border: var(--border-alt) !important;
+}

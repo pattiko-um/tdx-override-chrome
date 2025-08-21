@@ -30,10 +30,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "themes/um.css",
-        "themes/greyscale.css",
-        "themes/dark-greyscale.css",
-        "js/page-hook.js"
+        "themes/*",
+        "js/*"
       ],
       "matches": ["https://teamdynamix.umich.edu/*"]
     }
