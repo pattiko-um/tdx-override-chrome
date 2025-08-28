@@ -90,7 +90,8 @@ function initializeJsOverrides() {
     { selector: 'a', onclickFunction: 'openWinHref' },
     { selector: 'a', onclickFunction: 'openWorkMgmtModal' },
     { selector: 'li', onclickFunction: 'openWin' },
-    { selector: 'li', onclickFunction: 'openWorkMgmtModal' }
+    { selector: 'li', onclickFunction: 'openWorkMgmtModal' },
+    { selector: 'button', onclickFunction: 'openWin' }
   ];
 
   // Iterate over each target and set up the observer
