@@ -1,23 +1,24 @@
 :root {
   --bg-color: #121212 !important;
-  --bg-color-alt: #232323 !important;
+  --bg-color: #232323 !important;
   --text-color: #ffffff !important;
-  --text-color-alt: #ffcaf6 !important;
-  --link-color: #b3ffff !important;
+  --text-color-alt: #b3ffff !important;
+  --link-color: #ffcaf6 !important;
   --border: 1px solid var(--text-color) !important;
   --border-alt: 1px solid var(--text-color-alt) !important;
   --border-link: 1px solid var(--link-color) !important;
 }
 
 /* Global */
-body,
-body * {
+html,
+html * {
   background-color: var(--bg-color) !important;
   color: var(--text-color) !important;
 }
 
-body a {
+html a {
   color: var(--link-color) !important;
+  font-weight: 200 !important;
 }
 
 .tdx-table-fade-right {
@@ -29,8 +30,20 @@ body a {
   background: none !important;
 }
 
+/* Disable scrollbars */
+/* TODO: Style scrollbars */
+html *::-webkit-scrollbar {
+  display: none; /* hides the scrollbar entirely */
+}
+
+html * {
+  scrollbar-width: none; /* hides scrollbar */
+  -ms-overflow-style: none; /* IE/Edge Legacy */
+}
+
 /* Borders */
-.tdx-navigation-tabs li {
+.tdx-navigation-tabs li,
+.form-control:focus {
   border: var(--border-alt) !important;
 }
 
@@ -39,11 +52,76 @@ body a {
   border-radius: .5em !important;
 }
 
+/* Inputs */
+.tdx-input-group__textbox:active, 
+.tdx-input-group__textbox:focus,
+.input-group:focus,
+.input-group:active,
+.input-group:focus-within,
+.tdx-lookup-group:focus,
+.tdx-lookup-group:active,
+.tdx-lookup-group:focus-within {
+  border: var(--border-alt) !important;
+}
+
+input[type=checkbox],
+input[type=radio],
+input[type=checkbox]:hover,
+input[type=radio]:hover {
+  accent-color: var(--text-color-alt) !important;
+}
+
 /* Buttons, Icon/Link Groups */
-.tdx-dropdown, .tdx-dropdown *, /* Dropdown buttons */
+.tdx-dropdown {
+  border: var(--border-alt) !important;
+}
+
+.tdx-dropdown, 
+.tdx-dropdown *, /* Dropdown buttons */
 .tdx-navigation-tabs li *, /* Dashboard tabs */ 
-.tdx-action-menu * /* Action menu buttons */{
+.tdx-action-menu * /* Action menu buttons */ {
   color: var(--text-color-alt) !important;
+  filter: unset !important;
+}
+
+.tdx-action-menu__item--primary {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color-alt) !important;
+  border: var(--border-alt) !important;
+}
+
+.tdx-dropdown .tdx-icon {
+  display: none !important;
+}
+
+.tdx-btn--primary,
+#btnSubmit.btn-primary {
+  border: var(--border) !important;
+}
+
+.btn.btn-primary.tdx-primary-button-override {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color-alt) !important;
+  border: var(--border-alt) !important;
+}
+
+.tdx-navigation-tabs li.tdx-navigation-tabs__tab--active,
+.tdx-navigation-tabs li.tdx-navigation-tabs__home-tab--active {
+  border-bottom: none !important;
+}
+
+.tdx-tile-list__item-container {
+  border: var(--border) !important;
+  border-radius: .5em !important;
+}
+
+.tdx-tile-list__item-title:hover {
+  text-decoration: underline !important;
+}
+
+.tdx-icon.tdx-icon--hover-darken, .tdx-icon--hover-darken>.tdx-icon,
+.tdx-icon__encircled--active .tdx-icon,
+.tdx-icon--filter-purple {
   filter: unset !important;
 }
 
@@ -52,13 +130,53 @@ body a {
   background-color: transparent !important;
 }
 
-.tdx-dropdown-popout__menu {
+.tdx-dropdown-popout__menu,
+.tdx-action-menu-dropdown__popout {
+  padding: 0.5rem 0 !important;
   border: var(--border-alt) !important;
 }
 
 .tdx-dropdown-popout__menu,
 .tdx-dropdown-popout__menu a {
   border-radius: .5em !important;
+}
+
+.tdx-dropdown-popout__menu-item:hover,
+.tdx-action-menu-dropdown-popout__menu-item:hover {
+  text-decoration: underline !important;
+}
+
+.tdx-dropdown-popout__menu-item--selected {
+  font-weight: bold !important;
+}
+
+.dropdown-menu a:hover {
+  text-decoration: underline !important;
+}
+
+.tdx-vselect--large .vs__dropdown-toggle,
+.vs__dropdown-menu {
+  border: var(--border-alt) !important;
+}
+
+.vs__dropdown-menu {
+  border-top: none !important;
+}
+
+.vs__dropdown-menu li:hover {
+  text-decoration: underline !important;
+}
+
+.vs--single.vs--open .vs__selected,.vs--single.vs--loading .vs__selected {
+  position: inherit !important;
+  opacity: 1 !important;
+}
+
+/* Sidebars */
+
+.tdx-leftnav__item--active .tdx-leftnav__link,
+.tdx-leftnav__link:hover {
+  font-weight: bold !important;
 }
 
 /* Pager */
@@ -73,7 +191,9 @@ button.k-button.k-button-md.k-button-flat.k-button-flat-primary.k-selected:hover
 }
 
 /* Popup */
-#divHeader.white-bg {
+.tdx-sticky.white-bg,
+#divHeader.white-bg,
+#divMstrHeader.white-bg {
   background-color: var(--bg-color) !important;
 }
 
@@ -87,4 +207,46 @@ button.k-button.k-button-md.k-button-flat.k-button-flat-primary.k-selected:hover
 .tab-row .btn-primary:hover {
   background-color: var(--bg-color) !important;
   border: var(--border-alt) !important;
+}
+
+.btn-primary.tdx-primary-button-override:focus {
+  background-color: var(--bg-color) !important;
+  border: var(--border-alt) !important; 
+} 
+
+button#btnActions.btn.btn-primary.tdx-primary-button-override.btn-sm.dropdown-toggle:focus {
+  background-color: var(--bg-color) !important;
+  border: var(--border-alt) !important;
+}
+
+table.ui-datepicker-calendar tbody tr td a,
+.ui-timepicker-div select {
+  background: unset !important;
+}
+
+.cke_button_icon {
+  filter: invert(1) !important;
+}
+
+.cke_button_icon:hover {
+  opacity: 1 !important;
+  cursor: pointer !important;
+}
+
+/* Charts */
+
+/* make the chart background transparent */
+.k-chart path[stroke="none"][fill^="rgb"] {
+  fill: transparent !important;
+}
+
+/* keep the data slices white */
+.k-chart .k-chart-point path {
+  stroke: var(--text-color-alt) !important;
+  fill: var(--bg-color) !important;
+}
+
+/* keep legend + data labels white */
+.k-chart text {
+  fill: var(--text-color-alt) !important;
 }

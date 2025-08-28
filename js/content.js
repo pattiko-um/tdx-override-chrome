@@ -227,7 +227,7 @@ function inject(iframe, cssFile) {
     link.href = chrome.runtime.getURL(cssFile);
 
     if (doc.head) {
-    doc.head.appendChild(link);
+      doc.head.appendChild(link);
       console.log("TDX-Overrides-Log: Stylesheet injected successfully into iframe");
     } else {
       console.warn("TDX-Overrides-Log: Iframe has no <head>, retrying...");
@@ -239,5 +239,5 @@ function inject(iframe, cssFile) {
     doInject();
   } else {
     iframe.addEventListener('load', doInject, { once: true });
-}
+  }
 }
