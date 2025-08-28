@@ -58,7 +58,7 @@ function applySettings(settings) {
     // If the current key matches the settings, inject the corresponding CSS
     if (settings.prefTheme === key || settings.theme === key) {
       injectCss(value, `themes/${key}.css`);
-      injectCssIntoRightPanelIframe(`themes/${key}.css`);
+      injectCssIntoIframes(`themes/${key}.css`);
     }
   });
 
@@ -175,27 +175,69 @@ function openUrlInPopup(e, url) {
   e.stopPropagation();
   e.stopImmediatePropagation();
 
-  window.open(url, "_blank", `top=100,left=100,width=${popupWidth},height=${popupHeight}`);
+  window.open(url, "_blank", `width=${popupWidth},height=${popupHeight}`);
 };
 
-function injectCssIntoRightPanelIframe(cssFile) {
-  console.log("TDX-Overrides-Log: Attempting to inject CSS into right panel iframe");
-  const iframe = document.querySelector('.tdx-right-side-panel__iframe');
-  if (!iframe) return;
+function injectCssIntoIframes(cssFile) {
+  console.log("TDX-Overrides-Log: Watching for iframes...");
 
-  iframe.addEventListener('load', () => {
-    const doc = iframe.contentDocument || iframe.contentWindow.document;
+  // Ensure we wait for <body>
+  function startObserver() {
+    const body = document.body;
+    if (!body) {
+      return requestAnimationFrame(startObserver);
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.tagName === 'IFRAME') {
+            console.log("TDX-Overrides-Log: New iframe found, injecting CSS");
+            inject(node, cssFile);
+          }
+        });
+      });
+    });
+
+    observer.observe(body, { childList: true, subtree: true });
+
+    // Also handle any iframes already in the DOM
+    document.querySelectorAll('iframe').forEach((iframe) => {
+      inject(iframe, cssFile);
+    });
+  }
+
+  startObserver();
+}
+
+function inject(iframe, cssFile) {
+  function doInject() {
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
     if (!doc) return;
 
-    // Remove existing style if present
-    // const old = doc.getElementById(cssId);
-    // if (old) old.remove();
+    if (doc.getElementById('tdx-overrides-style')) {
+      console.log("TDX-Overrides-Log: Stylesheet already injected in iframe");
+      return;
+    }
 
     const link = doc.createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
-    link.id = cssId;
+    link.id = 'tdx-overrides-style';
     link.href = chrome.runtime.getURL(cssFile);
+
+    if (doc.head) {
     doc.head.appendChild(link);
-  }, { once: true });
+      console.log("TDX-Overrides-Log: Stylesheet injected successfully into iframe");
+    } else {
+      console.warn("TDX-Overrides-Log: Iframe has no <head>, retrying...");
+      setTimeout(doInject, 100);
+    }
+  }
+
+  if (iframe.contentDocument?.readyState === 'complete') {
+    doInject();
+  } else {
+    iframe.addEventListener('load', doInject, { once: true });
+}
 }
