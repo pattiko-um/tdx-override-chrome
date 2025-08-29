@@ -2,8 +2,8 @@
   --bg-color: #121212 !important;
   --bg-color: #232323 !important;
   --text-color: #ffffff !important;
-  --text-color-alt: #b3ffff !important;
-  --link-color: #ffcaf6 !important;
+  --text-color-alt: #ffcaf6 !important;
+  --link-color: #b3ffff!important;
   --border: 1px solid var(--text-color) !important;
   --border-alt: 1px solid var(--text-color-alt) !important;
   --border-link: 1px solid var(--link-color) !important;
@@ -18,7 +18,7 @@ html * {
 
 html a {
   color: var(--link-color) !important;
-  font-weight: 200 !important;
+  font-weight: 400 !important;
 }
 
 .tdx-table-fade-right {
@@ -52,16 +52,38 @@ html * {
   border-radius: .5em !important;
 }
 
+.tdx-overlay__item {
+  border: var(--border) !important;
+}
+
+.tdx-overlay__item {
+  border: var(--border) !important;
+}
+
 /* Inputs */
 .tdx-input-group__textbox:active, 
 .tdx-input-group__textbox:focus,
-.input-group:focus,
-.input-group:active,
-.input-group:focus-within,
+.form-group .input-group:focus,
+.form-group .input-group:active,
+.form-group .input-group:focus-within,
 .tdx-lookup-group:focus,
 .tdx-lookup-group:active,
 .tdx-lookup-group:focus-within {
   border: var(--border-alt) !important;
+}
+
+.input-group::placeholder {
+  color: var(--text-color) !important;
+}
+
+.input-group .select2-container .select2-choice>.select2-chosen,
+.select2-container.form-control.js-template-chooser.select2-allowclear .select2-choice>.select2-chosen {
+  color: var(--text-color) !important;
+}
+
+.input-group .select2-container .select2-choice>.select2-chosen:focus,
+.select2-container.form-control.js-template-chooser.select2-allowclear .select2-choice>.select2-chosen:focus {
+  color: var(--text-color-alt) !important;
 }
 
 input[type=checkbox],
@@ -69,6 +91,10 @@ input[type=radio],
 input[type=checkbox]:hover,
 input[type=radio]:hover {
   accent-color: var(--text-color-alt) !important;
+}
+
+.k-list-container.k-popup {
+  border: var(--border) !important
 }
 
 /* Buttons, Icon/Link Groups */
@@ -81,17 +107,12 @@ input[type=radio]:hover {
 .tdx-navigation-tabs li *, /* Dashboard tabs */ 
 .tdx-action-menu * /* Action menu buttons */ {
   color: var(--text-color-alt) !important;
-  filter: unset !important;
 }
 
 .tdx-action-menu__item--primary {
   background-color: var(--bg-color) !important;
   color: var(--text-color-alt) !important;
   border: var(--border-alt) !important;
-}
-
-.tdx-dropdown .tdx-icon {
-  display: none !important;
 }
 
 .tdx-btn--primary,
@@ -121,8 +142,24 @@ input[type=radio]:hover {
 
 .tdx-icon.tdx-icon--hover-darken, .tdx-icon--hover-darken>.tdx-icon,
 .tdx-icon__encircled--active .tdx-icon,
-.tdx-icon--filter-purple {
+.tdx-icon--filter-purple,
+.tdx-close-x,
+.tdx-dropdown .tdx-icon,
+.vs__open-indicator,
+.tdx-icon.tdx-icon--home-on,
+.tdx-icon.tdx-icon--home {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  background-color: transparent !important;
+}
+
+.tdx-icon.tdx-icon--add.tdx-icon--filter-bright,
+.tdx-action-menu-dropdown--no-arrow:hover .tdx-icon.tdx-icon--gear,
+.tdx-action-menu-dropdown--no-arrow.active .tdx-icon {
   filter: unset !important;
+}
+
+.vs__deselect path {
+  fill: var(--text-color-alt) !important;
 }
 
 /* Dropdowns  */
@@ -170,6 +207,20 @@ input[type=radio]:hover {
 .vs--single.vs--open .vs__selected,.vs--single.vs--loading .vs__selected {
   position: inherit !important;
   opacity: 1 !important;
+}
+
+.js_tdx-dropdown-popout.tdx-dropdown-popout.tdx-dropdown-popout--left {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border: var(--border-alt) !important;
+}
+
+.js_tdx-dropdown-popout.tdx-dropdown-popout.tdx-dropdown-popout--left .js_tdx-dropdown-popout-menu.tdx-dropdown-popout__menu  {
+  border: none !important;
+}
+
+.js_tdx-dropdown-popout-menu.tdx-dropdown-popout__menu .tdx-dropdown__divider {
+  display: none !important;
 }
 
 /* Sidebars */
@@ -249,4 +300,24 @@ table.ui-datepicker-calendar tbody tr td a,
 /* keep legend + data labels white */
 .k-chart text {
   fill: var(--text-color-alt) !important;
+}
+
+/* Search Bars */
+.tdx-searchbar__textbox,
+.tdx-searchbar__textbox.tdx-searchbar__textbox--dark,
+#globalSearchBar > * {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+  border: var(--border) !important;
+}
+
+input.tdx-searchbar__textbox::placeholder{
+  color: var(--text-color-alt) !important;
+  opacity: 1 !important;
+}
+
+/* Slide Out Pane */
+.tdx-right-side-panel.tdx-right-side-panel--showing {
+  padding-top: 5px !important;
+  border: var(--border) !important;
 }

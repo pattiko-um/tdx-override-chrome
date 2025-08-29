@@ -59,6 +59,7 @@ function applySettings(settings) {
     if (settings.prefTheme === key || settings.theme === key) {
       injectCss(value, `themes/${key}.css`);
       injectCssIntoIframes(`themes/${key}.css`);
+      // injectCssIntoShadowRoots(`themes/${key}.css`);
     }
   });
 

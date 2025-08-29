@@ -6,6 +6,7 @@
   "content_scripts": [
     {
       "matches": [
+        "https://teamdynamix.umich.edu/tdworkmanagement/WorkManagement/Home/DynamicApp/*",
         "https://teamdynamix.umich.edu/TDWorkManagement/*",
         "https://teamdynamix.umich.edu/TDNext/Apps/*"
       ],
@@ -20,6 +21,7 @@
     "scripting"
   ],
   "host_permissions": [
+    "https://teamdynamix.umich.edu/tdworkmanagement/WorkManagement/Home/DynamicApp/*",
     "https://teamdynamix.umich.edu/TDWorkManagement/*",
     "https://teamdynamix.umich.edu/TDNext/Apps/*"
   ],
