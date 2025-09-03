@@ -3,6 +3,7 @@ const cssThemeNames = {
   'greyscale': 'tdx-greyscale-override-css',
   'dark-greyscale': 'tdx-dark-greyscale-override-css',
   'dark': 'tdx-dark-override-css',
+  'custom': 'tdx-custom-override-css'
 };
 
 // Utility: inject or remove CSS by id and file

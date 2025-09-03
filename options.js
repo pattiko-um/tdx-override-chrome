@@ -12,6 +12,8 @@ function broadcastOptionsUpdate(theme, popup, bgColor) {
 
 function updatePrefTheme() {
   const theme = document.getElementById('theme').value;
+  toggleCustomColors();
+
   chrome.storage.sync.set({ prefTheme: theme }, () => {
     chrome.storage.sync.get({ prefPopup: false }, (items) => {
       broadcastOptionsUpdate(theme, items.prefPopup);
@@ -37,6 +39,8 @@ function restoreOptions() {
       document.getElementById('bgColor').value = items.customBgColor;
     }
   );
+
+  toggleCustomColors();
 }
 
 function updateBgColor() {
@@ -52,3 +56,12 @@ document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('theme').addEventListener('change', updatePrefTheme);
 document.getElementById('popup').addEventListener('change', updatePrefPopup);
 document.getElementById('bgColor').addEventListener('change', updateBgColor);
+
+function toggleCustomColors() {
+  const theme = document.getElementById('theme').value;
+  const colorRows = document.querySelectorAll('.color-row');
+  
+  colorRows.forEach(row => {
+    row.style.display = theme === 'custom' ? 'block' : 'none';
+  });
+}

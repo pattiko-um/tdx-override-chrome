@@ -1,0 +1,322 @@
+:root {
+  --bg-color: #000080 !important;
+  --text-color: #ffffff !important;
+  --text-color-alt: #ffff00 !important;
+  --link-color: #ffac66!important;
+  --border: 1px solid var(--text-color) !important;
+  --border-alt: 1px solid var(--text-color-alt) !important;
+  --border-link: 1px solid var(--link-color) !important;
+}
+
+/* Global */
+html,
+html * {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+html a {
+  color: var(--link-color) !important;
+  font-weight: 400 !important;
+}
+
+.tdx-table-fade-right {
+  /* Disable fade effect on tables */
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  background: none !important;
+}
+
+/* Disable scrollbars */
+/* TODO: Style scrollbars */
+html *::-webkit-scrollbar {
+  display: none; /* hides the scrollbar entirely */
+}
+
+html * {
+  scrollbar-width: none; /* hides scrollbar */
+  -ms-overflow-style: none; /* IE/Edge Legacy */
+}
+
+/* Borders */
+.tdx-navigation-tabs li,
+.form-control:focus {
+  border: var(--border-alt) !important;
+}
+
+.tdx-dashboard__column > div > div {
+  border: var(--border) !important;
+  border-radius: .5em !important;
+}
+
+.tdx-overlay__item {
+  border: var(--border) !important;
+}
+
+.tdx-overlay__item {
+  border: var(--border) !important;
+}
+
+/* Inputs */
+.tdx-input-group__textbox:active, 
+.tdx-input-group__textbox:focus,
+.form-group .input-group:focus,
+.form-group .input-group:active,
+.form-group .input-group:focus-within,
+.tdx-lookup-group:focus,
+.tdx-lookup-group:active,
+.tdx-lookup-group:focus-within {
+  border: var(--border-alt) !important;
+}
+
+.input-group::placeholder {
+  color: var(--text-color) !important;
+}
+
+.input-group .select2-container .select2-choice>.select2-chosen,
+.select2-container.form-control.js-template-chooser.select2-allowclear .select2-choice>.select2-chosen {
+  color: var(--text-color) !important;
+}
+
+.input-group .select2-container .select2-choice>.select2-chosen:focus,
+.select2-container.form-control.js-template-chooser.select2-allowclear .select2-choice>.select2-chosen:focus {
+  color: var(--text-color-alt) !important;
+}
+
+input[type=checkbox],
+input[type=radio],
+input[type=checkbox]:hover,
+input[type=radio]:hover {
+  accent-color: var(--text-color-alt) !important;
+}
+
+.k-list-container.k-popup {
+  border: var(--border) !important
+}
+
+/* Buttons, Icon/Link Groups */
+.tdx-dropdown {
+  border: var(--border-alt) !important;
+}
+
+.tdx-dropdown, 
+.tdx-dropdown *, /* Dropdown buttons */
+.tdx-navigation-tabs li *, /* Dashboard tabs */ 
+.tdx-action-menu * /* Action menu buttons */ {
+  color: var(--text-color-alt) !important;
+}
+
+.tdx-action-menu__item--primary {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color-alt) !important;
+  border: var(--border-alt) !important;
+}
+
+.tdx-btn--primary,
+#btnSubmit.btn-primary {
+  border: var(--border) !important;
+}
+
+.btn.btn-primary.tdx-primary-button-override {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color-alt) !important;
+  border: var(--border-alt) !important;
+}
+
+.tdx-navigation-tabs li.tdx-navigation-tabs__tab--active,
+.tdx-navigation-tabs li.tdx-navigation-tabs__home-tab--active {
+  border-bottom: none !important;
+}
+
+.tdx-tile-list__item-container {
+  border: var(--border) !important;
+  border-radius: .5em !important;
+}
+
+.tdx-tile-list__item-title:hover {
+  text-decoration: underline !important;
+}
+
+.tdx-icon.tdx-icon--hover-darken, .tdx-icon--hover-darken>.tdx-icon,
+.tdx-icon__encircled--active .tdx-icon,
+.tdx-icon--filter-purple,
+.tdx-close-x,
+.tdx-dropdown .tdx-icon,
+.vs__open-indicator,
+.tdx-icon.tdx-icon--home-on,
+.tdx-icon.tdx-icon--home {
+  filter: brightness(0) saturate(100%) invert(1) !important;
+  background-color: transparent !important;
+}
+
+.tdx-icon.tdx-icon--add.tdx-icon--filter-bright,
+.tdx-action-menu-dropdown--no-arrow:hover .tdx-icon.tdx-icon--gear,
+.tdx-action-menu-dropdown--no-arrow.active .tdx-icon {
+  filter: unset !important;
+}
+
+.vs__deselect path {
+  fill: var(--text-color-alt) !important;
+}
+
+/* Dropdowns  */
+.tdx-dropdown-popout {
+  background-color: transparent !important;
+}
+
+.tdx-dropdown-popout__menu,
+.tdx-action-menu-dropdown__popout {
+  padding: 0.5rem 0 !important;
+  border: var(--border-alt) !important;
+}
+
+.tdx-dropdown-popout__menu,
+.tdx-dropdown-popout__menu a {
+  border-radius: .5em !important;
+}
+
+.tdx-dropdown-popout__menu-item:hover,
+.tdx-action-menu-dropdown-popout__menu-item:hover {
+  text-decoration: underline !important;
+}
+
+.tdx-dropdown-popout__menu-item--selected {
+  font-weight: bold !important;
+}
+
+.dropdown-menu a:hover {
+  text-decoration: underline !important;
+}
+
+.tdx-vselect--large .vs__dropdown-toggle,
+.vs__dropdown-menu {
+  border: var(--border-alt) !important;
+}
+
+.vs__dropdown-menu {
+  border-top: none !important;
+}
+
+.vs__dropdown-menu li:hover {
+  text-decoration: underline !important;
+}
+
+.vs--single.vs--open .vs__selected,.vs--single.vs--loading .vs__selected {
+  position: inherit !important;
+  opacity: 1 !important;
+}
+
+.js_tdx-dropdown-popout.tdx-dropdown-popout.tdx-dropdown-popout--left {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border: var(--border-alt) !important;
+}
+
+.js_tdx-dropdown-popout.tdx-dropdown-popout.tdx-dropdown-popout--left .js_tdx-dropdown-popout-menu.tdx-dropdown-popout__menu  {
+  border: none !important;
+}
+
+.js_tdx-dropdown-popout-menu.tdx-dropdown-popout__menu .tdx-dropdown__divider {
+  display: none !important;
+}
+
+/* Sidebars */
+
+.tdx-leftnav__item--active .tdx-leftnav__link,
+.tdx-leftnav__link:hover {
+  font-weight: bold !important;
+}
+
+/* Pager */
+.k-pager-md .k-pager-numbers-wrap .k-button.k-pager-nav.k-button-md,
+.k-pager-md .k-pager-numbers-wrap .k-button.k-pager-nav.k-button-md:hover,
+.k-pager-md .k-pager-numbers-wrap .k-button.k-pager-nav.k-disabled,
+button.k-button.k-button-md.k-button-flat.k-button-flat-primary:hover,
+button.k-button.k-button-md.k-button-flat.k-button-flat-primary.k-selected,
+button.k-button.k-button-md.k-button-flat.k-button-flat-primary.k-selected:hover {
+  background-color: transparent !important;
+  border: var(--border) !important;
+}
+
+/* Popup */
+.tdx-sticky.white-bg,
+#divHeader.white-bg,
+#divMstrHeader.white-bg {
+  background-color: var(--bg-color) !important;
+}
+
+.tab-row .btn-primary, 
+.tab-row .btn-primary * {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color-alt) !important;
+}
+
+.tab-row .btn-primary.dropdown-toggle,
+.tab-row .btn-primary:hover {
+  background-color: var(--bg-color) !important;
+  border: var(--border-alt) !important;
+}
+
+.btn-primary.tdx-primary-button-override:focus {
+  background-color: var(--bg-color) !important;
+  border: var(--border-alt) !important; 
+} 
+
+button#btnActions.btn.btn-primary.tdx-primary-button-override.btn-sm.dropdown-toggle:focus {
+  background-color: var(--bg-color) !important;
+  border: var(--border-alt) !important;
+}
+
+table.ui-datepicker-calendar tbody tr td a,
+.ui-timepicker-div select {
+  background: unset !important;
+}
+
+.cke_button_icon {
+  filter: invert(1) !important;
+}
+
+.cke_button_icon:hover {
+  opacity: 1 !important;
+  cursor: pointer !important;
+}
+
+/* Charts */
+
+/* make the chart background transparent */
+.k-chart path[stroke="none"][fill^="rgb"] {
+  fill: transparent !important;
+}
+
+/* keep the data slices white */
+.k-chart .k-chart-point path {
+  stroke: var(--text-color-alt) !important;
+  fill: var(--bg-color) !important;
+}
+
+/* keep legend + data labels white */
+.k-chart text {
+  fill: var(--text-color-alt) !important;
+}
+
+/* Search Bars */
+.tdx-searchbar__textbox,
+.tdx-searchbar__textbox.tdx-searchbar__textbox--dark,
+#globalSearchBar > * {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+  border: var(--border) !important;
+}
+
+input.tdx-searchbar__textbox::placeholder{
+  color: var(--text-color-alt) !important;
+  opacity: 1 !important;
+}
+
+/* Slide Out Pane */
+.tdx-right-side-panel.tdx-right-side-panel--showing {
+  padding-top: 5px !important;
+  border: var(--border) !important;
+}
