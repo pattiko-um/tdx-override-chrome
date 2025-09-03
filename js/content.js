@@ -30,9 +30,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 });
 
-// Listen for changes at load
+// Listen for changes at load - UPDATED to include customBgColor
 chrome.storage.sync.get(
-  { prefTheme: 'default', prefPopup: false },
+  { prefTheme: 'default', prefPopup: false, customBgColor: '#121212' },
   applySettings
 );
 
@@ -83,21 +83,27 @@ function applySettings(settings) {
     // Optionally, remove any hooks if needed (not shown here)
   }
 
-  // Apply custom background color if set
-  if (settings.bgColor || settings.customBgColor) {
-    console.log(settings.bgColor);
-    
+  // UPDATED: Apply custom background color for custom theme
+  if (settings.prefTheme === 'custom' || settings.theme === 'custom') {
     const bgColor = settings.bgColor || settings.customBgColor;
+    
+    if (bgColor) {
+      console.log("TDX-Overrides-Log: Applying custom background color:", bgColor);
+      
+      // Remove any existing custom color override
+      const existingStyle = document.getElementById('custom-bg-override');
+      if (existingStyle) existingStyle.remove();
 
-    // Remove any existing custom color override
+      // Inject new style
+      const style = document.createElement('style');
+      style.id = 'custom-bg-override';
+      style.textContent = `:root { --bg-color: ${bgColor} !important; }`;
+      document.head.appendChild(style);
+    }
+  } else {
+    // Remove custom color override if not using custom theme
     const existingStyle = document.getElementById('custom-bg-override');
     if (existingStyle) existingStyle.remove();
-
-    // Inject new style
-    const style = document.createElement('style');
-    style.id = 'custom-bg-override';
-    style.textContent = `:root { --bg-color: ${bgColor} !important; }`;
-    document.head.appendChild(style);
   }
 }
 
