@@ -30,9 +30,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 });
 
-// Listen for changes at load - UPDATED to include customBgColor
+// Listen for changes at load - UPDATED to include all custom colors
 chrome.storage.sync.get(
-  { prefTheme: 'default', prefPopup: false, customBgColor: '#121212' },
+  { 
+    prefTheme: 'default', 
+    prefPopup: false, 
+    customBgColor: '#232323',
+    customTextColor: '#ffffff',
+    customTextColorAlt: '#ffff00',
+    customLinkColor: '#ffac66'
+  },
   applySettings
 );
 
@@ -83,26 +90,37 @@ function applySettings(settings) {
     // Optionally, remove any hooks if needed (not shown here)
   }
 
-  // UPDATED: Apply custom background color for custom theme
+  // UPDATED: Apply all custom colors for custom theme
   if (settings.prefTheme === 'custom' || settings.theme === 'custom') {
     const bgColor = settings.bgColor || settings.customBgColor;
+    const textColor = settings.textColor || settings.customTextColor;
+    const textColorAlt = settings.textColorAlt || settings.customTextColorAlt;
+    const linkColor = settings.linkColor || settings.customLinkColor;
     
-    if (bgColor) {
-      console.log("TDX-Overrides-Log: Applying custom background color:", bgColor);
-      
-      // Remove any existing custom color override
-      const existingStyle = document.getElementById('custom-bg-override');
-      if (existingStyle) existingStyle.remove();
+    console.log("TDX-Overrides-Log: Applying custom colors:", {
+      bgColor, textColor, textColorAlt, linkColor
+    });
+    
+    // Remove any existing custom color override
+    const existingStyle = document.getElementById('custom-colors-override');
+    if (existingStyle) existingStyle.remove();
 
-      // Inject new style
-      const style = document.createElement('style');
-      style.id = 'custom-bg-override';
-      style.textContent = `:root { --bg-color: ${bgColor} !important; }`;
-      document.head.appendChild(style);
-    }
+    // Build CSS with all custom colors
+    let customCss = ':root {';
+    if (bgColor) customCss += ` --bg-color: ${bgColor} !important;`;
+    if (textColor) customCss += ` --text-color: ${textColor} !important;`;
+    if (textColorAlt) customCss += ` --text-color-alt: ${textColorAlt} !important;`;
+    if (linkColor) customCss += ` --link-color: ${linkColor} !important;`;
+    customCss += ' }';
+
+    // Inject new style with all custom colors
+    const style = document.createElement('style');
+    style.id = 'custom-colors-override';
+    style.textContent = customCss;
+    document.head.appendChild(style);
   } else {
     // Remove custom color override if not using custom theme
-    const existingStyle = document.getElementById('custom-bg-override');
+    const existingStyle = document.getElementById('custom-colors-override');
     if (existingStyle) existingStyle.remove();
   }
 }
