@@ -1,8 +1,8 @@
 :root {
-  --bg-color: #181818 !important;
+  --bg-color: #000080 !important;
   --text-color: #ffffff !important;
-  --text-color-alt: #ffcaf6 !important;
-  --link-color: #b3ffff!important;
+  --text-color-alt: #ffff00 !important;
+  --link-color: #ffac66!important;
   --border: 1px solid var(--text-color) !important;
   --border-alt: 1px solid var(--text-color-alt) !important;
   --border-link: 1px solid var(--link-color) !important;
