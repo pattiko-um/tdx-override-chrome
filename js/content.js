@@ -59,7 +59,6 @@ function applySettings(settings) {
     if (settings.prefTheme === key || settings.theme === key) {
       injectCss(value, `themes/${key}.css`);
       injectCssIntoIframes(`themes/${key}.css`);
-      // injectCssIntoShadowRoots(`themes/${key}.css`);
     }
   });
 
@@ -81,6 +80,23 @@ function applySettings(settings) {
     popupListenerActive = false;
     pageHookInjected = false;
     // Optionally, remove any hooks if needed (not shown here)
+  }
+
+  // Apply custom background color if set
+  if (settings.bgColor || settings.customBgColor) {
+    console.log(settings.bgColor);
+    
+    const bgColor = settings.bgColor || settings.customBgColor;
+
+    // Remove any existing custom color override
+    const existingStyle = document.getElementById('custom-bg-override');
+    if (existingStyle) existingStyle.remove();
+
+    // Inject new style
+    const style = document.createElement('style');
+    style.id = 'custom-bg-override';
+    style.textContent = `:root { --bg-color: ${bgColor} !important; }`;
+    document.head.appendChild(style);
   }
 }
 
